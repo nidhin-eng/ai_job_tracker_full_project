@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const pool = require('../db');
 
-// Get all jobs for a user
+// 📌 Get all jobs for a user
 router.get('/', auth, async (req, res) => {
   try {
     const result = await pool.query(
@@ -16,17 +16,17 @@ router.get('/', auth, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch jobs' });
   }
 });
-  
-// Add a new job
+
+// 📌 Add a new job
 router.post('/', auth, async (req, res) => {
   const {
     company,
     role,
     jd,
     status,
-    applied_on,       // format: 'YYYY-MM-DD'
+    applied_on, // format: 'YYYY-MM-DD'
     ai_summary,
-    skills             // pass as JS array (e.g., ["Node.js", "SQL"])
+    skills // pass as JS array (e.g., ["Node.js", "SQL"])
   } = req.body;
 
   try {
@@ -46,16 +46,18 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// PUT /api/jobs/:id - Update job by ID
+// 📌 Update job by ID
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
   const { company, role, jd, status, applied_on, skills, ai_summary } = req.body;
 
   try {
     const result = await pool.query(
-      `UPDATE jobs SET company=$1, role=$2, jd=$3, status=$4, applied_on=$5, skills=$6, ai_summary=$7
-       WHERE id=$8 AND user_id=$9 RETURNING *`,
-      [company, role, jd, status, applied_on, skills, ai_summary, id, req.user.id]
+      `UPDATE jobs 
+       SET company=$1, role=$2, jd=$3, status=$4, applied_on=$5, skills=$6, ai_summary=$7
+       WHERE id=$8 AND user_id=$9
+       RETURNING *`,
+      [company, role, jd, status, applied_on, skills, ai_summary, id, req.userId]
     );
 
     if (result.rows.length === 0) {
@@ -69,14 +71,14 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
-// DELETE /api/jobs/:id - Delete job by ID
+// 📌 Delete job by ID
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   try {
     const result = await pool.query(
       `DELETE FROM jobs WHERE id=$1 AND user_id=$2 RETURNING *`,
-      [id, req.user.id]
+      [id, req.userId]
     );
 
     if (result.rows.length === 0) {
@@ -89,6 +91,5 @@ router.delete('/:id', auth, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
 
 module.exports = router;

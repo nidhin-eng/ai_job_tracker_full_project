@@ -1,23 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const {
-  createJob,
-  getJobsByUser,
-  updateAISummary,
-  deleteJob
-} = require('../models/job'); // model functions
 const authenticate = require('../middleware/auth');
-
 const pool = require('../db');
 
-async function createJob(title, company, jd, userId) {
+// ✅ Create Job
+async function createJob(title, company, jd, skills, status, userId) {
   const result = await pool.query(
-    'INSERT INTO jobs (title, company, jd, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
-    [title, company, jd, userId]
+    `INSERT INTO jobs (title, company, jd, skills, status, user_id) 
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+    [title, company, jd, skills, status, userId]
   );
   return result.rows[0];
 }
 
+// ✅ Get Jobs for a User
 async function getJobsByUser(userId) {
   const result = await pool.query(
     'SELECT * FROM jobs WHERE user_id = $1 ORDER BY created_at DESC',
@@ -26,22 +22,17 @@ async function getJobsByUser(userId) {
   return result.rows;
 }
 
+// ✅ Update AI Summary
 async function updateAISummary(jobId, summary) {
   await pool.query('UPDATE jobs SET ai_summary = $1 WHERE id = $2', [summary, jobId]);
 }
 
+// ✅ Delete Job
 async function deleteJob(jobId) {
   await pool.query('DELETE FROM jobs WHERE id = $1', [jobId]);
 }
 
-module.exports = {
-  createJob,
-  getJobsByUser,
-  updateAISummary,
-  deleteJob,
-};
-
-// ✅ GET all jobs for a user
+// ✅ GET all jobs
 router.get('/', authenticate, async (req, res) => {
   try {
     const jobs = await getJobsByUser(req.user.id);
@@ -52,17 +43,25 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
-// ✅ POST create a new job
+// ✅ POST create new job
 router.post('/', authenticate, async (req, res) => {
-  const { title, company, jd } = req.body;
+  const { title, company, jd, skills, status, applied_date } = req.body;
   const userId = req.user.id;
 
   if (!title || !company || !jd) {
-    return res.status(400).json({ error: 'Missing title, company, or jd' });
+    return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
-    const newJob = await createJob(title, company, jd, userId);
+    const newJob = await createJob(
+      title,
+      company,
+      jd,
+      skills || [],
+      status || 'Applied',
+      applied_date || new Date(),
+      userId
+    );
     res.json(newJob);
   } catch (err) {
     console.error('Job creation error:', err);

@@ -1,0 +1,136 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f6f8fa;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* 🚫 Prevent horizontal scroll */
+}
+
+.App {
+  max-width: 900px;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 32px 24px;
+  box-sizing: border-box; /* ✅ Prevent padding from causing overflow */
+}
+
+h1 {
+  text-align: center;
+  color: #2d3748;
+}
+
+.add-job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.add-job-form input,
+.add-job-form textarea,
+.add-job-form select {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.gradient-bg {
+  background: linear-gradient(-45deg, #ff6b6b, #f8e71c, #4a90e2, #50e3c2);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.add-job-form button {
+  background: #3182ce;
+  color: #fff;
+  border: none;
+  padding: 10px 0;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-job-form button:disabled {
+  background: #90cdf4;
+  cursor: not-allowed;
+}
+
+.add-job-form .error {
+  color: #e53e3e;
+  font-size: 0.95rem;
+}
+
+/* ====== Job Cards Layout ====== */
+.job-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px; /* closer spacing */
+  max-width: 900px;
+  margin: 0 auto;
+  background: transparent; /* remove any unwanted background */
+}
+
+.job-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile view: 1 column */
+@media (max-width: 768px) {
+  .job-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.job-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.job-list th, .job-list td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.job-list th {
+  background: #f1f5f9;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
