@@ -22,7 +22,8 @@ pool.query('SELECT NOW()')
   .then(() => console.log("✅ DB Connected"))
   .catch(err => console.error("❌ DB Connection Error:", err.stack));
 
-
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 // Use routers AFTER app is defined
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', jobsRouter);
