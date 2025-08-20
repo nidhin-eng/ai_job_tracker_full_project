@@ -16,6 +16,8 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Express is alive!');
 });
+// server/index.js
+app.get('/ping', (req, res) => res.send('pong'));
 
 // Logger
 app.use((req, res, next) => {
