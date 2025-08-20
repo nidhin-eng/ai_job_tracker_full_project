@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
+import API_BASE_URL from '../config';
 
-// Animated 3D balls background
 const BallsBG = () => (
   <div className="balls-bg">
     {[...Array(24)].map((_,i) => (
@@ -22,7 +21,7 @@ const Auth = ({ onAuth }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`http://localhost:5000/api/users/${isLogin ? 'login' : 'register'}`, {
+      const res = await fetch(`${API_BASE_URL}/api/users/${isLogin ? 'login' : 'register'}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

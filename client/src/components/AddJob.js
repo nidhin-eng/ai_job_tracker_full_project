@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import API_BASE_URL from '../config';
 
-// Animated 3D balls background for AddJob
 const BallsBG = () => (
   <div className="balls-bg addjob-balls-bg">
     {[...Array(18)].map((_,i) => (
@@ -24,7 +24,7 @@ const AddJob = ({ token, onJobAdded }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/jobs', {
+      const res = await fetch(`${API_BASE_URL}/api/jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

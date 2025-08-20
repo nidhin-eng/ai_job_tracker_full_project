@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import API_BASE_URL from '../config';
 
 const statusColors = {
   Applied: '#2563eb',
@@ -25,7 +26,7 @@ const JobList = ({ token }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/jobs', {
+      const res = await fetch(`${API_BASE_URL}/api/jobs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -41,7 +42,7 @@ const JobList = ({ token }) => {
   const handleAI = async (job) => {
     setAiLoading(job.id);
     try {
-      const res = await fetch('/api/ai/summary', {
+      const res = await fetch(`${API_BASE_URL}/api/ai/summary`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +62,7 @@ const JobList = ({ token }) => {
   const handleDelete = async (jobId) => {
     if (!window.confirm('Are you sure you want to delete this job application?')) return;
     try {
-      const res = await fetch(`/api/jobs/${jobId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -89,7 +90,7 @@ const JobList = ({ token }) => {
 
   const handleEditSave = async (jobId) => {
     try {
-      const res = await fetch(`/api/jobs/${jobId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -106,35 +107,15 @@ const JobList = ({ token }) => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        padding: '30px',
-        background: 'linear-gradient(135deg, #f9f9ff, #e0f7fa, #fff3e0)',
-      }}
-    >
-      <h2 style={{
-        textAlign: 'center',
-        marginBottom: 24,
-        fontSize: '2rem',
-        fontWeight: 'bold',
-        color: '#333'
-      }}>
+    <div style={{ minHeight: '100vh', padding: '30px', background: 'linear-gradient(135deg, #f9f9ff, #e0f7fa, #fff3e0)' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: 24, fontSize: '2rem', fontWeight: 'bold', color: '#333' }}>
         📋 Job Applications
       </h2>
 
       {loading && <div className="spinner"></div>}
       {error && <div className="alert-error">{error}</div>}
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '12px', // Closer spacing
-          maxWidth: '1100px',
-          margin: '0 auto'
-        }}
-      >
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', maxWidth: '1100px', margin: '0 auto' }}>
         {jobs.map(job => (
           <div
             key={job.id}
@@ -177,16 +158,14 @@ const JobList = ({ token }) => {
               <>
                 <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#333' }}>{job.company}</div>
                 <div style={{ fontSize: '1rem', color: '#666' }}>{job.role}</div>
-                <div
-                  style={{
-                    background: statusColors[job.status] || statusColors.Other,
-                    color: '#fff',
-                    padding: '4px 10px',
-                    borderRadius: '50px',
-                    fontSize: '0.8rem',
-                    display: 'inline-block'
-                  }}
-                >
+                <div style={{
+                  background: statusColors[job.status] || statusColors.Other,
+                  color: '#fff',
+                  padding: '4px 10px',
+                  borderRadius: '50px',
+                  fontSize: '0.8rem',
+                  display: 'inline-block'
+                }}>
                   {job.status}
                 </div>
                 <div style={{ fontSize: '0.85rem', color: '#777' }}>Applied: {job.applied_on}</div>
@@ -200,46 +179,14 @@ const JobList = ({ token }) => {
                 </div>
                 <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
                   <button
-                    style={{
-                      background: '#2563eb',
-                      color: '#fff',
-                      border: 'none',
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      flex: 1
-                    }}
+                    style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', flex: 1 }}
                     onClick={() => handleAI(job)}
                     disabled={aiLoading === job.id}
                   >
                     {aiLoading === job.id ? '⏳ Processing...' : '🤖 AI Parse'}
                   </button>
-                  <button
-                    style={{
-                      background: '#f59e42',
-                      color: '#fff',
-                      border: 'none',
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => handleEdit(job)}
-                  >
-                    ✏️ Edit
-                  </button>
-                  <button
-                    style={{
-                      background: '#ef4444',
-                      color: '#fff',
-                      border: 'none',
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => handleDelete(job.id)}
-                  >
-                    🗑️ Delete
-                  </button>
+                  <button style={{ background: '#f59e42', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }} onClick={() => handleEdit(job)}>✏️ Edit</button>
+                  <button style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }} onClick={() => handleDelete(job.id)}>🗑️ Delete</button>
                 </div>
               </>
             )}
