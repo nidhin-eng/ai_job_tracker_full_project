@@ -15,7 +15,8 @@ const usersRouter = require('./routes/users');
 // ✅ Configure CORS
 const allowedOrigins = [
   'http://localhost:3000', 
-  'https://<your-netlify-site>.netlify.app'
+  "http://localhost:3002",
+  'https://neon-hotteok-64e764.netlify.app'
 ];
 app.use(cors({
   origin: (origin, cb) => {

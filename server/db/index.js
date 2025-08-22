@@ -1,11 +1,8 @@
-const { Pool } = require("pg");
+const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "jobtracker",
-  password: "nidhi",  
-  port: 5432,
+  connectionString: process.env.DATABASE_URL, // Render provides this
+  ssl: { rejectUnauthorized: false }          // Important for Render Postgres
 });
 
 module.exports = pool;
